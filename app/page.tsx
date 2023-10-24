@@ -9,7 +9,7 @@ export default function Home() {
   const [showBoard, setShowBoard] = useState<boolean>(false);
 
   return (
-    <main className="flex min-h-screen min-w-fit items-center justify-center bg-[#0a0c10]">
+    <main className="flex min-h-screen min-w-fit items-center justify-center bg-[#0a0c10]">{/**#2e343f */}
       {!showBoard ? (
         <button
           className="border-dashed border-4 border-[#7a828e] p-24 rounded-xl"
