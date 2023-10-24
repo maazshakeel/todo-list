@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import Board from "./_components/Board";
+import TodoCard from "./_components/TodoCard";
 
 export default function Home() {
   const [showBoard, setShowBoard] = useState<boolean>(false);
