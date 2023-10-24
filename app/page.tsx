@@ -8,13 +8,13 @@ export default function Home() {
   const [showBoard, setShowBoard] = useState<boolean>(false);
 
   return (
-    <main className="flex min-h-screen w-screen items-center justify-center bg-[#0a0c10]">
+    <main className="flex min-h-screen min-w-fit items-center justify-center bg-[#0a0c10]">
       {!showBoard ? (
         <button
-          className="border-dashed border-4 border-gray-900 p-24 rounded-xl"
+          className="border-dashed border-4 border-[#7a828e] p-24 rounded-xl"
           onClick={() => setShowBoard(true)}
         >
-          <AiOutlinePlus size={150} color={"#000"} />
+          <AiOutlinePlus size={150} color={"#7a828e"} />
         </button>
       ) : (
         <Board />
