@@ -3,13 +3,17 @@
 import { AiOutlineEllipsis, AiOutlinePlus } from "react-icons/ai";
 import { BoardProps, Todos } from "../_types/Board";
 import TodoCard from "./TodoCard";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { GlobalContext } from "../_context/Global";
 
 export default function Board(): React.ReactElement {
 
   const [todos, setTodos] = useState<Todos>()
   const [showModal, setShowModal] = useState<boolean>(false);
   const [todoInput, setTodoInput] = useState<string>("")
+
+  // context
+  const { isInputModelOpen, setIsInputModelOpen } = useContext(GlobalContext);
 
   // add todo
   const addTodo = () => {
@@ -37,14 +41,14 @@ export default function Board(): React.ReactElement {
 
     }
 
-    setShowModal(false)
+    setIsInputModelOpen(false)
     setTodoInput("")
     alert("Added! ✅")
   }
 
   return (
     <div className="flex flex-row gap-2">
-      {showModal ? (
+      {isInputModelOpen ? (
         <>
           <div
             className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -57,7 +61,7 @@ export default function Board(): React.ReactElement {
                   <h3 className="text-3xl font-semibold text-[#f0f3f6]">Add Item</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-[#f0f3f6] opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => setIsInputModelOpen(false)}
                   >
                     <span className="bg-transparent text-[#f0f3f6] opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
                       ×
@@ -73,7 +77,7 @@ export default function Board(): React.ReactElement {
                   <button
                     className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => setIsInputModelOpen(false)}
                   >
                     Discard
                   </button>
@@ -109,7 +113,7 @@ export default function Board(): React.ReactElement {
 
           {/*three dots*/}
           <div className="hover:bg-[#474d58] hover:cursor-pointer hover:rounded-md p-1">
-            <AiOutlinePlus onClick={() => setShowModal(true)} size={20} color={"#dbdbc6"} />
+            <AiOutlinePlus onClick={() => setIsInputModelOpen(true)} size={20} color={"#dbdbc6"} />
           </div>
         </div>
 
