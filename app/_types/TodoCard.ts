@@ -1,3 +1,5 @@
+import { Todo } from "./Board";
+
 export type TodoCardProps = {
-    children: React.ReactNode;
+    children: Todo;
 };

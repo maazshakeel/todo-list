@@ -28,6 +28,10 @@ export default function Board(): React.ReactElement {
     };
   }, [])
 
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
   // add todo
 
   const handleAddTodo = (e: React.FormEvent, formData: string | any) => {
@@ -76,7 +80,14 @@ export default function Board(): React.ReactElement {
         reverseOrder={false}
 
       />
-      <AiFillQuestionCircle size={50} color={"white"} className="absolute bottom-3 right-3" />
+      <AiFillQuestionCircle onClick={() => {
+        toast(
+          "🌐 Press ⏎ CTRL + Space to add todo.",
+          {
+            duration: 6000,
+          }
+        );
+      }} size={50} color={"white"} className="absolute bottom-3 right-3 hover:cursor-pointer hover:shadow-xl" />
       {isInputModelOpen ? (
         <>
           <div
@@ -84,34 +95,29 @@ export default function Board(): React.ReactElement {
           >
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
-              <div className="p-5 border-0 rounded-lg shadow-xl relative flex flex-col w-full bg-[#0a0c10] outline-none focus:outline-none">
+              <div style={{
+                boxShadow: 'rgb(82, 89, 100) 0px 0px 0px 1px, rgba(1, 4, 9, 0.85) 0px 16px 32px',
+                animation: '200ms cubic-bezier(0.33, 1, 0.68, 1) 0s 1 normal none running overlay--dialog-appear'
+              }} className="p-5 border-0 rounded-lg relative flex flex-col w-full bg-[#272b33] outline-none focus:outline-none">
                 {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl font-semibold text-[#f0f3f6]">Add Item</h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-[#f0f3f6] opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setIsInputModelOpen(false)}
-                  >
-                    <span className="bg-transparent text-[#f0f3f6] opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
+                <div className="flex items-start justify-between pt-5 pl-5 border-none">
+                  <h3 className="text-3xl font-semibold text-[#f0f3f6]">Add Todo</h3>
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <input autoFocus onKeyDown={(e: any) => handleKeyPress(e)} value={todoInput} onChange={(e) => setTodoInput(e.target.value)} className="border-2 border-solid border-[#f0f3f6] p-4 rounded-md" placeholder="Start typing to create a draft" />
+                  <input autoFocus onKeyDown={(e: any) => handleKeyPress(e)} value={todoInput} onChange={(e) => setTodoInput(e.target.value)} className="border-2 border-solid border-[#f0f3f6] py-4 px-4 w-72 rounded-md text-sm" placeholder="Start typing to create a draft" />
                 </div>
                 {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                <div className="flex items-center justify-end pb-6 pr-6 border-none">
                   <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button"
                     onClick={() => setIsInputModelOpen(false)}
                   >
-                    Discard
+                    Cancel
                   </button>
                   <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button"
                     onClick={(e) => handleAddTodo(e, todoInput)}
                   >
@@ -149,7 +155,7 @@ export default function Board(): React.ReactElement {
         <p className="mt-2 text-[#f0f3f6] font-[400] text-[14px]">This item hasn't been started</p>
 
         {
-          todos && todos.map((todo: Todo) => <TodoCard key={todo.id}>{todo.todo}</TodoCard>)
+          todos && todos.map((todo: Todo) => <TodoCard key={todo.id}>{todo}</TodoCard>)
         }
 
       </div>
