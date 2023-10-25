@@ -2,9 +2,9 @@ export type BoardProps = {
     children: React.ReactNode;
 };
 
-export type Todos = Array<{
+export type Todo = {
     id: number,
     todo: string,
     type: string,
     status: boolean
-}>;
+};

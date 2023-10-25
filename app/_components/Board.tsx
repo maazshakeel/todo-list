@@ -1,53 +1,82 @@
 "use client";
 
-import { AiOutlineEllipsis, AiOutlinePlus } from "react-icons/ai";
-import { BoardProps, Todos } from "../_types/Board";
+import { AiFillQuestionCircle, AiOutlineEllipsis, AiOutlinePlus } from "react-icons/ai";
+import { Todo } from "../_types/Board";
 import TodoCard from "./TodoCard";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../_context/Global";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Board(): React.ReactElement {
 
-  const [todos, setTodos] = useState<Todos>()
-  const [showModal, setShowModal] = useState<boolean>(false);
   const [todoInput, setTodoInput] = useState<string>("")
 
   // context
-  const { isInputModelOpen, setIsInputModelOpen } = useContext(GlobalContext);
+  const { isInputModelOpen, setIsInputModelOpen, todos, addTodo } = useContext(GlobalContext);
+
+  useEffect(() => {
+    function handleAddTodoOnKey(e: KeyboardEvent) {
+      if (e.ctrlKey && e.key === ' ') {
+        setIsInputModelOpen(true)
+      }
+    }
+
+    window.addEventListener('keydown', handleAddTodoOnKey);
+
+    return () => {
+      window.removeEventListener('keydown', handleAddTodoOnKey);
+    };
+  }, [])
 
   // add todo
-  const addTodo = () => {
 
+  const handleAddTodo = (e: React.FormEvent, formData: string | any) => {
+    e.preventDefault();
     if (!todoInput) {
-      alert("Add todo?")
+      toast.error("Todo is epmty!?")
       return;
     }
-
-    if (todos) {
-
-      setTodos([...todos, {
-        id: todos.length + 1,
-        todo: todoInput,
-        type: "todo",
-        status: false
-      }])
-    } else {
-      setTodos([{
-        id: 1,
-        todo: todoInput,
-        type: "todo",
-        status: false
-      }])
-
-    }
-
-    setIsInputModelOpen(false)
+    addTodo(formData);
     setTodoInput("")
-    alert("Added! ✅")
+
+    toast('Todo Added!',
+      {
+        icon: '✅',
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      }
+    );
+  };
+
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      // handleAddTodo()
+      if (!todoInput) {
+        toast.error("Todo is epmty!?")
+        return;
+      }
+      addTodo(todoInput)
+      setTodoInput("")
+      return
+    }
+    if (e.key === 'Escape') {
+      setTodoInput("")
+      setIsInputModelOpen(false)
+      return
+    }
   }
 
   return (
     <div className="flex flex-row gap-2">
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+
+      />
+      <AiFillQuestionCircle size={50} color={"white"} className="absolute bottom-3 right-3" />
       {isInputModelOpen ? (
         <>
           <div
@@ -70,7 +99,7 @@ export default function Board(): React.ReactElement {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <input value={todoInput} onChange={(e) => setTodoInput(e.target.value)} className="border-2 border-solid border-[#f0f3f6] p-4 rounded-md" placeholder="Start typing to create a draft" />
+                  <input autoFocus onKeyDown={(e: any) => handleKeyPress(e)} value={todoInput} onChange={(e) => setTodoInput(e.target.value)} className="border-2 border-solid border-[#f0f3f6] p-4 rounded-md" placeholder="Start typing to create a draft" />
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
@@ -84,7 +113,7 @@ export default function Board(): React.ReactElement {
                   <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={addTodo}
+                    onClick={(e) => handleAddTodo(e, todoInput)}
                   >
                     Add
                   </button>
@@ -95,7 +124,7 @@ export default function Board(): React.ReactElement {
           <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </>
       ) : null}
-      <div className="h-[35rem] w-96 border-[2px] border-[#7a828e] rounded-md border-solid pr-4 pl-4 pt-[8px] pb-2 overflow-clip">
+      <div className="h-[35rem] w-96 border-[2px] border-[#7a828e] rounded-md border-solid pr-4 pl-4 pt-[8px] pb-2 overflow-clip overflow-y-auto">
         {/*circkle todo and number of items*/}
         <div className="flex flex-wrap items-center justify-between">
           <div className="flex flex-wrap items-center gap-2">
@@ -120,8 +149,9 @@ export default function Board(): React.ReactElement {
         <p className="mt-2 text-[#f0f3f6] font-[400] text-[14px]">This item hasn't been started</p>
 
         {
-          todos && todos.map(todo => <TodoCard key={todo.id}>{todo.todo}</TodoCard>)
+          todos && todos.map((todo: Todo) => <TodoCard key={todo.id}>{todo.todo}</TodoCard>)
         }
+
       </div>
 
       {/* <p className="mt-2 text-[#f0f3f6] font-[400] text-[20px]">Testing for the bottom button</p> */}
