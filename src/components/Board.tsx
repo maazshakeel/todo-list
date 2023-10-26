@@ -12,7 +12,7 @@ export default function Board(): React.ReactElement {
   const [todoInput, setTodoInput] = useState<string>("")
 
   // context
-  const { isInputModelOpen, setIsInputModelOpen, todos, addTodo } = useContext(GlobalContext);
+  const { isInputModelOpen, setIsInputModelOpen, todos, addTodo, setTodos } = useContext(GlobalContext);
 
   useEffect(() => {
     function handleAddTodoOnKey(e: KeyboardEvent) {
@@ -29,7 +29,12 @@ export default function Board(): React.ReactElement {
   })
 
   useEffect(() => {
+
+    // if (typeof window !== 'undefined') {
+    console.log(localStorage.getItem("todos"))
+    // setTodos(localStorage.getItem('todos'))
     localStorage.setItem("todos", JSON.stringify(todos));
+    // }
   }, [todos]);
 
   // add todo

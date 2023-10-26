@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, createContext, useState } from "react";
+import { FC, createContext, useEffect, useState } from "react";
 import { TodoContextType } from "../types/GlobalContext";
 import { Todo } from "../types/Board";
 
@@ -9,14 +9,26 @@ export const GlobalContext = createContext<TodoContextType | any | null>(null)
 const GlobalProvider: FC<any> = ({ children }: any) => {
     const [isInputModelOpen, setIsInputModelOpen] = useState<boolean>(false);
     const [isDeleteModelOpen, setIsDeletemodelOpen] = useState<boolean>(false);
-    const [todos, setTodos] = useState<Todo[]>(() => {
-        const savedTodos = localStorage.getItem("todos");
-        if (savedTodos) {
-            return JSON.parse(savedTodos);
-        } else {
-            return [];
-        }
+    const [todos, setTodos] = useState<Todo[]>()
+
+    useEffect(() => {
+        console.log(localStorage.getItem('todos'))
     })
+
+    // useEffect(() => {
+    //     let savedTodos: any = ""
+    //     savedTodos = localStorage.getItem("todos");
+    //     console.log(savedTodos)
+    //     if (savedTodos) {
+    //         try {
+    //             setTodos(JSON.parse(savedTodos))
+    //         } catch (e) {
+    //             return
+    //         }
+    //     } else {
+    //         setTodos([]);
+    //     }
+    // })
 
     const addTodo = (todo: string) => {
         if (todos) {
@@ -47,7 +59,7 @@ const GlobalProvider: FC<any> = ({ children }: any) => {
     }
 
     return (
-        <GlobalContext.Provider value={{ isInputModelOpen, setIsInputModelOpen, addTodo, todos, isDeleteModelOpen, setIsDeletemodelOpen, deleteTodo }}>
+        <GlobalContext.Provider value={{ isInputModelOpen, setIsInputModelOpen, addTodo, setTodos, todos, isDeleteModelOpen, setIsDeletemodelOpen, deleteTodo }}>
             {children}
         </GlobalContext.Provider>
     )
