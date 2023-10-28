@@ -32,16 +32,7 @@ export default function Board(): React.ReactElement {
     };
   });
 
-  useEffect(() => {
-    // if (typeof window !== 'undefined') {
-    console.log(localStorage.getItem("todos"));
-    // setTodos(localStorage.getItem('todos'))
-    localStorage.setItem("todos", JSON.stringify(todos));
-    // }
-  }, [todos]);
-
   // add todo
-
   const handleAddTodo = (e: React.FormEvent, formData: string | any) => {
     e.preventDefault();
     if (!todoInput) {
